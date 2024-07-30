@@ -1,6 +1,5 @@
 If you want to see the application and interact with it, please access http://localhost:8080/template.jsf .
-
-
+=================================================================
 
 ATTENTION: I do not recommend this example anymore! Better use [JoinFaces](http://joinfaces.org/)
 
