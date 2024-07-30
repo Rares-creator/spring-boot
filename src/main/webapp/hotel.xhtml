@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{hotelManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{hotelManagedBean.locatieCautare}" placeholder="Introduceti locatia"/>
+
+                <p:commandButton value="Cauta hoteluri dupa locatie"
+                                 action="#{hotelManagedBean.cautaHotelDupaLocatie()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{hotelManagedBean.piscinaCautare}" placeholder="Doriti piscina:"/>
+                <p:inputText value="#{hotelManagedBean.restaurantCautare}" placeholder="Doriti restaurant:"/>
+
+                <p:commandButton value="Cauta hoteluri care au piscina si restaurant"
+                                 action="#{hotelManagedBean.cautaHotelDupaPiscinaSiRestaurant()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{hotelManagedBean.hotelCautareCustom.locatie}" placeholder="Locatie Hotel"/>
+                <p:inputText value="#{hotelManagedBean.hotelCautareCustom.denumire}" placeholder="Denumire Hotel"/>
+                <p:inputText value="#{hotelManagedBean.hotelCautareCustom.restaurant}" placeholder="Restaurant Hotel"/>
+                <p:inputText value="#{hotelManagedBean.hotelCautareCustom.piscina}" placeholder="Piscina Hotel"/>
+
+                <p:commandButton value="Cauta hoteluri custom"
+                                 action="#{hotelManagedBean.cautareHoteluriCustom()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="hotel" value="#{hotelManagedBean.hotels}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{hotel.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Nume">
+                        <h:outputText value="#{hotel.denumire}"/>
+                    </p:column>
+
+                    <p:column headerText="Locatie">
+                        <h:outputText value="#{hotel.locatie}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Piscina">
+                        <h:outputText value="#{hotel.piscina}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Restaurant">
+                        <h:outputText value="#{hotel.restaurant}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{hotelManagedBean.pregatesteActualizareHotel(hotel)}"/>
+
+
+                        <p:dialog header="Actualizare Hotel" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{hotelManagedBean.hotelPentruActualizare.denumire}"
+                                         placeholder="Denumire"/>
+                            <p:inputText value="#{hotelManagedBean.hotelPentruActualizare.locatie}"
+                                         placeholder="Locatie"/>
+                            <p:inputText value="#{hotelManagedBean.hotelPentruActualizare.piscina}"
+                                         placeholder="Piscina"/>
+                            <p:inputText value="#{hotelManagedBean.hotelPentruActualizare.restaurant}"
+                                         placeholder="Restaurant"/>
+
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{hotelManagedBean.actualizeazaHotel()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{hotelManagedBean.verificaCamereSiSeteazaMesajDialog(hotel)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Hotel" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{hotelManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{hotelManagedBean.stergeHotel()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{hotelManagedBean.hotelToSave.denumire}" placeholder="Denumire"/>
+                    <p:inputText value="#{hotelManagedBean.hotelToSave.locatie}" placeholder="Locatie"/>
+
+                    <p:outputLabel style="padding-top: 7px" value="Restaurant:"/>
+                    <p:selectOneRadio value="#{hotelManagedBean.hotelToSave.restaurant}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+
+                    <p:outputLabel style="padding-top: 7px" value="Piscina:"/>
+                    <p:selectOneRadio value="#{hotelManagedBean.hotelToSave.piscina}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+                    <p:commandButton update="@form" value="Adaugă Hotel"
+                                     action="#{hotelManagedBean.adaugaHotel()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

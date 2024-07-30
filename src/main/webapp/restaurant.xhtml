@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{restaurantManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{restaurantManagedBean.locatieCautare}" placeholder="Introduceti locatia"/>
+
+                <p:commandButton value="Cauta restaurante dupa locatie"
+                                 action="#{restaurantManagedBean.cautaRestaurantDupaLocatie()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{restaurantManagedBean.restaurantCautareCustom.denumire}"
+                             placeholder="Denumire Restaurant"/>
+                <p:inputText value="#{restaurantManagedBean.restaurantCautareCustom.locatie}"
+                             placeholder="Locatie Restaurant"/>
+
+
+                <p:commandButton value="Cauta restaurante custom"
+                                 action="#{restaurantManagedBean.cautaRestaurantCustom()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:dataTable var="restaurant" value="#{restaurantManagedBean.restaurants}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{restaurant.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Denumire">
+                        <h:outputText value="#{restaurant.denumire}"/>
+                    </p:column>
+
+                    <p:column headerText="Locatie">
+                        <h:outputText value="#{restaurant.locatie}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{restaurantManagedBean.pregatesteActualizareRestaurant(restaurant)}"/>
+
+
+                        <p:dialog header="Actualizare Restaurant" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{restaurantManagedBean.restaurantPentruActualizare.denumire}"
+                                         placeholder="Denumire"/>
+                            <p:inputText value="#{restaurantManagedBean.restaurantPentruActualizare.locatie}"
+                                         placeholder="Locatie"/>
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{restaurantManagedBean.actualizeazaRestaurant()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{restaurantManagedBean.verificaMeseSiSeteazaMesajDialog(restaurant)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Restaurant" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{restaurantManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{restaurantManagedBean.stergeRestaurant()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{restaurantManagedBean.restaurantToSave.denumire}" placeholder="Denumire"/>
+                    <p:inputText value="#{restaurantManagedBean.restaurantToSave.locatie}" placeholder="Locatie"/>
+
+
+                    <p:commandButton update="@form" value="Adaugă Restaurant"
+                                     action="#{restaurantManagedBean.adaugaRestaurant()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

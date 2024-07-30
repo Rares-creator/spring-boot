@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+
+                <p:commandButton style="float: right" value="Reset" action="#{birouManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{birouManagedBean.materialCautare}" placeholder="Introduceti materialul"/>
+
+                <p:commandButton value="Cauta birouri dupa material"
+                                 action="#{birouManagedBean.cautaBirouriDupaMaterial}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{birouManagedBean.dimensiuneCautare}" placeholder="Introduceti dimensiunea"/>
+                <p:inputText value="#{birouManagedBean.pretMaiMareCautare}" placeholder="Introduceti pretul"/>
+
+                <p:commandButton value="Cauta birouri dupa dimensiune si pret mai mare"
+                                 action="#{birouManagedBean.cautaBirouriDupaDimensiuneSiPretMaiMare()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{birouManagedBean.culoareCautare}" placeholder="Introduceti culoarea"/>
+                <p:inputText value="#{birouManagedBean.pretMaiMicCautare}" placeholder="Introduceti pretul"/>
+
+                <p:commandButton value="Cauta birouri dupa culoare si pret mai mic"
+                                 action="#{birouManagedBean.cautaBirouriDupaCuloareSiPretMaiMic()}"
+                                 update="@form"/>
+
+                <br/>
+
+                <p:inputText value="#{birouManagedBean.birouCautareCustom.material}"
+                             placeholder="Introduceti materialul"/>
+                <p:inputText value="#{birouManagedBean.birouCautareCustom.pret}" placeholder="Introduceti pretul"/>
+                <p:inputText value="#{birouManagedBean.birouCautareCustom.dimensiune}"
+                             placeholder="Introduceti dimensiunea"/>
+                <p:inputText value="#{birouManagedBean.birouCautareCustom.culoare}" placeholder="Introduceti culoarea"/>
+                <p:inputText value="#{birouManagedBean.birouCautareCustom.greutate}"
+                             placeholder="Introduceti greutatea"/>
+
+                <p:commandButton value="Cauta birouri custom"
+                                 action="#{birouManagedBean.cautaBirouCustom()}"
+                                 update="@form"/>
+
+                <br/>
+                <p:dataTable var="birou" value="#{birouManagedBean.birous}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{birou.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Culoare">
+                        <h:outputText value="#{birou.culoare}"/>
+                    </p:column>
+
+                    <p:column headerText="Dimensiune">
+                        <h:outputText value="#{birou.dimensiune}"/>
+                    </p:column>
+
+                    <p:column headerText="Material">
+                        <h:outputText value="#{birou.material}"/>
+                    </p:column>
+
+                    <p:column headerText="Greutate">
+                        <h:outputText value="#{birou.greutate}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Pret">
+                        <h:outputText value="#{birou.pret}"/>
+                    </p:column>
+
+                    <p:column headerText="Id Apartament">
+                        <h:outputText value="#{birou.apartament}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+
+
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{birouManagedBean.pregatesteActualizareBirou(birou)}"/>
+
+
+                        <p:dialog header="Actualizare Birou" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{birouManagedBean.birouPentruActualizare.culoare}"
+                                         placeholder="Culoare"/>
+                            <p:inputText value="#{birouManagedBean.birouPentruActualizare.dimensiune}"
+                                         placeholder="Dimensiune"/>
+                            <p:inputText value="#{birouManagedBean.birouPentruActualizare.material}"
+                                         placeholder="Material"/>
+                            <p:inputText value="#{birouManagedBean.birouPentruActualizare.pret}" placeholder="Pret"/>
+                            <p:selectOneMenu value="#{birouManagedBean.apartamentIdPentruActualizare}">
+                                <f:selectItems value="#{birouManagedBean.apartamente}" var="apartament"
+                                               itemValue="#{apartament.id}"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{birouManagedBean.actualizeazaBirou()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+
+
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{birouManagedBean.seteazaIdBirourPentruStergere(birou)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Birou" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{birouManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{birouManagedBean.stergeBirou()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+
+                <div style="display: flex">
+                    <p:inputText value="#{birouManagedBean.birouToSave.culoare}" placeholder="Culoare"/>
+                    <p:inputText value="#{birouManagedBean.birouToSave.dimensiune}" placeholder="Dimensiune"/>
+                    <p:inputText value="#{birouManagedBean.birouToSave.material}" placeholder="Material"/>
+                    <p:inputText value="#{birouManagedBean.birouToSave.greutate}" placeholder="Greutate"/>
+                    <p:inputText value="#{birouManagedBean.birouToSave.pret}" placeholder="Pret"/>
+
+                    <p:outputLabel style="padding-top: 7px" value="Apartament:"/>
+                    <p:selectOneMenu value="#{birouManagedBean.apartamentId}">
+                        <f:selectItems value="#{birouManagedBean.apartamente}" var="apartament"
+                                       itemValue="#{apartament.id}"/>
+                    </p:selectOneMenu>
+
+                    <p:commandButton update="@form" value="Adaugă Birou"
+                                     action="#{birouManagedBean.adaugaBirou()}"/>
+                </div>
+
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

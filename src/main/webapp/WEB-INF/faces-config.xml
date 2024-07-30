@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+        http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+              version="2.2">
+
+    <application>
+        <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+    </application>
+
+
+    <navigation-rule>
+        <from-view-id>/template.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>animal</from-outcome>
+            <to-view-id>/animal.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>apartament</from-outcome>
+            <to-view-id>/apartament.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>biblioteca</from-outcome>
+            <to-view-id>/biblioteca.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>birou</from-outcome>
+            <to-view-id>/birou.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>camera</from-outcome>
+            <to-view-id>/camera.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>carte</from-outcome>
+            <to-view-id>/carte.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>hotel</from-outcome>
+            <to-view-id>/hotel.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>laptop</from-outcome>
+            <to-view-id>/laptop.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>masa</from-outcome>
+            <to-view-id>/masa.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>mouse</from-outcome>
+            <to-view-id>/mouse.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>pantof</from-outcome>
+            <to-view-id>/pantof.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>person</from-outcome>
+            <to-view-id>/person.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>pizza</from-outcome>
+            <to-view-id>/pizza.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>restaurant</from-outcome>
+            <to-view-id>/restaurant.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>surub</from-outcome>
+            <to-view-id>/surub.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>tricou</from-outcome>
+            <to-view-id>/tricou.xhtml</to-view-id>
+        </navigation-case>
+
+
+    </navigation-rule>
+
+</faces-config>
+

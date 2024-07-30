@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+
+        <h:body>
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{animalManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{animalManagedBean.rasaCautare}" placeholder="Introduceti rasa"/>
+
+                <p:commandButton value="Cauta animale dupa rasa" action="#{animalManagedBean.cautaAnimalDupaRasa()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{animalManagedBean.pedigreeCautare}" placeholder="Introduceti pedigree"/>
+                <p:inputText value="#{animalManagedBean.varstaMaiMicaDeCautare}" placeholder="Introduceti varsta"/>
+
+                <p:commandButton value="Cauta animale dupa pedigree si varsta mai mica"
+                                 action="#{animalManagedBean.cautaAnimalDupaPedigreeSiVarstaMaiMica()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{animalManagedBean.animalCautareCustom.rasa}" placeholder="Introduceti rasa"/>
+                <p:inputText value="#{animalManagedBean.animalCautareCustom.nume}" placeholder="Introduceti nume"/>
+                <p:inputText value="#{animalManagedBean.animalCautareCustom.varsta}" placeholder="Introduceti varsta"/>
+                <p:inputText value="#{animalManagedBean.animalCautareCustom.pedigree}"
+                             placeholder="Introduceti pedigree"/>
+                <p:outputLabel style="padding-top: 7px" value="Sex:"/>
+                <p:selectOneMenu value="#{animalManagedBean.animalCautareCustom.sex}">
+                    <f:selectItems value="#{animalManagedBean.loadListOfSexes()}"/>
+                </p:selectOneMenu>
+
+                <p:commandButton value="Cauta animale custom"
+                                 action="#{animalManagedBean.cautaAnimalCustom()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="animal" value="#{animalManagedBean.animals}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{animal.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Nume">
+                        <h:outputText value="#{animal.nume}"/>
+                    </p:column>
+
+                    <p:column headerText="Pedigree">
+                        <h:outputText value="#{animal.pedigree}"/>
+                    </p:column>
+
+                    <p:column headerText="Rasa">
+                        <h:outputText value="#{animal.rasa}"/>
+                    </p:column>
+
+                    <p:column headerText="Varsta">
+                        <h:outputText value="#{animal.varsta}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Sex">
+                        <h:outputText value="#{animal.sex}"/>
+                    </p:column>
+
+                    <p:column headerText="Stapan">
+                        <h:outputText value="#{animal.person}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{animalManagedBean.pregatesteActualizareAnimal(animal)}"/>
+
+
+                        <p:dialog header="Actualizare Animal" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{animalManagedBean.animalPentruActualizare.nume}" placeholder="Nume"/>
+                            <p:inputText value="#{animalManagedBean.animalPentruActualizare.rasa}"
+                                         placeholder="Rasa"/>
+                            <p:inputText value="#{animalManagedBean.animalPentruActualizare.pedigree}"
+                                         placeholder="Pedigree"/>
+                            <p:inputText value="#{animalManagedBean.animalPentruActualizare.varsta}"
+                                         placeholder="Varsta"/>
+                            <p:selectOneMenu value="#{animalManagedBean.personIdPentruActualizare}">
+
+                                <f:selectItems value="#{animalManagedBean.persoane}" var="person"
+                                               itemValue="#{person.id}"/>
+                            </p:selectOneMenu>
+                            <p:selectOneMenu value="#{animalManagedBean.animalPentruActualizare.sex}">
+                                <f:selectItems value="#{animalManagedBean.loadListOfSexes()}"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{animalManagedBean.actualizeazaAnimal()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{animalManagedBean.verificaAnimale(animal)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Animal" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{animalManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{animalManagedBean.stergeAnimal()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+
+                <div style="display: flex">
+                    <p:inputText value="#{animalManagedBean.animalToSave.nume}" placeholder="Nume"/>
+                    <p:inputText value="#{animalManagedBean.animalToSave.rasa}" placeholder="Rasa"/>
+                    <p:inputText value="#{animalManagedBean.animalToSave.varsta}" placeholder="Varsta"/>
+
+                    <p:selectOneMenu value="#{animalManagedBean.animalToSave.sex}">
+                        <f:selectItems value="#{animalManagedBean.loadListOfSexes()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel style="padding-top: 7px" value="Pedigree:"/>
+                    <p:selectOneRadio value="#{animalManagedBean.animalToSave.pedigree}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+                    <p:outputLabel style="padding-top: 7px" value="Stapan:"/>
+                    <p:selectOneMenu value="#{animalManagedBean.stapanId}">
+                        <f:selectItems value="#{animalManagedBean.persoane}" var="person" itemValue="#{person.id}"/>
+                    </p:selectOneMenu>
+                    <p:commandButton update="@form" value="Adaugă Animal"
+                                     action="#{animalManagedBean.adaugaAnimal}"/>
+                </div>
+
+
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+
+</html>

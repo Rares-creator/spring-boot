@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+
+                <p:commandButton style="float: right" value="Reset" action="#{laptopManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{laptopManagedBean.denumireCautare}" placeholder="Introduceti denumirea"/>
+
+                <p:commandButton value="Cauta laptopuri dupa denumire"
+                                 action="#{laptopManagedBean.cautaLaptopDupaDenumire()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{laptopManagedBean.memorieRamCautare}" placeholder="Memorie Ram:"/>
+                <p:inputText value="#{laptopManagedBean.fastUsbCautare}" placeholder="Fast Usb:"/>
+
+                <p:commandButton value="Cauta laptopuri dupa memorie ram si fast usb"
+                                 action="#{laptopManagedBean.cautaLaptopDupaMemorieRamSiFastUsb()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{laptopManagedBean.laptopCautareCustom.denumire}" placeholder="Denumire Laptop"/>
+                <p:inputText value="#{laptopManagedBean.laptopCautareCustom.placaVideo}"
+                             placeholder="Placa Video Laptop"/>
+                <p:inputText value="#{laptopManagedBean.laptopCautareCustom.memorieRam}" placeholder="Memorie Ram "/>
+                <p:inputText value="#{laptopManagedBean.laptopCautareCustom.fastUsb}" placeholder="Fast Usb"/>
+                <p:inputText value="#{laptopManagedBean.laptopCautareCustom.capacitateBaterie}"
+                             placeholder="Capacitate Baterie"/>
+
+                <p:commandButton value="Cauta laptopuri custom"
+                                 action="#{laptopManagedBean.cautaLaptopuri()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{hotelManagedBean.hotelCautareCustom.locatie}" placeholder="Locatie Hotel"/>
+                <p:inputText value="#{hotelManagedBean.hotelCautareCustom.denumire}" placeholder="Denumire Hotel"/>
+                <p:inputText value="#{hotelManagedBean.hotelCautareCustom.restaurant}" placeholder="Restaurant Hotel"/>
+                <p:inputText value="#{hotelManagedBean.hotelCautareCustom.piscina}" placeholder="Piscina Hotel"/>
+
+                <p:commandButton value="Cauta hoteluri custom"
+                                 action="#{hotelManagedBean.cautareHoteluriCustom()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="laptop" value="#{laptopManagedBean.laptops}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{laptop.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Denumire">
+                        <h:outputText value="#{laptop.denumire}"/>
+                    </p:column>
+
+                    <p:column headerText="Placa Video">
+                        <h:outputText value="#{laptop.placaVideo}"/>
+                    </p:column>
+
+                    <p:column headerText="Memorie Ram">
+                        <h:outputText value="#{laptop.memorieRam}"/>
+                    </p:column>
+
+                    <p:column headerText="Capacitate Baterie">
+                        <h:outputText value="#{laptop.capacitateBaterie}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Fast Usb">
+                        <h:outputText value="#{laptop.fastUsb}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{laptopManagedBean.pregatesteActualizareLaptop(laptop)}"/>
+
+
+                        <p:dialog header="Actualizare Laptop" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{laptopManagedBean.laptopPentruActualizare.denumire}"
+                                         placeholder="Denumire"/>
+                            <p:inputText value="#{laptopManagedBean.laptopPentruActualizare.placaVideo}"
+                                         placeholder="Placa Video"/>
+                            <p:inputText value="#{laptopManagedBean.laptopPentruActualizare.fastUsb}"
+                                         placeholder="Fast Usb"/>
+                            <p:inputText value="#{laptopManagedBean.laptopPentruActualizare.memorieRam}"
+                                         placeholder="Memorie Ram"/>
+                            <p:inputText value="#{laptopManagedBean.laptopPentruActualizare.capacitateBaterie}"
+                                         placeholder="Capacitate Baterie"/>
+
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{laptopManagedBean.actualizeazaLaptop()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{laptopManagedBean.verificaLaptop(laptop)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Laptop" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{laptopManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{laptopManagedBean.stergeLaptop()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{laptopManagedBean.laptopToSave.denumire}" placeholder="Denumire"/>
+                    <p:inputText value="#{laptopManagedBean.laptopToSave.placaVideo}" placeholder="Placa Video"/>
+                    <p:inputText value="#{laptopManagedBean.laptopToSave.memorieRam}" placeholder="Memorie Ram"/>
+                    <p:inputText value="#{laptopManagedBean.laptopToSave.capacitateBaterie}"
+                                 placeholder="Capacitate Baterie"/>
+                    <p:outputLabel style="padding-top: 7px" value="Fast Usb:"/>
+                    <p:selectOneRadio value="#{laptopManagedBean.laptopToSave.fastUsb}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+                    <p:commandButton update="@form" value="Adaugă Laptop"
+                                     action="#{laptopManagedBean.adaugaLaptop()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

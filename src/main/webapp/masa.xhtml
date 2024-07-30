@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{masaManagedBean.reset()}" update="@form"/>
+                <p:inputText value="#{masaManagedBean.capacitateMasaCautare}"
+                             placeholder="Introduceti numarul persoanelor"/>
+
+                <p:commandButton value="Cauta masa dupa numarul persoanelor"
+                                 action="#{masaManagedBean.cautaMasaDupaCapacitate()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{masaManagedBean.denumireRestaurantCautare}"
+                             placeholder="Introduceti numele restaurantului:"/>
+                <p:inputText value="#{masaManagedBean.numarMasaCautare}" placeholder="Numar masa:"/>
+
+                <p:commandButton value="Cauta masa dupa numele restaurantului si nume masa"
+                                 action="#{masaManagedBean.cautaMasaDupaDenumireRestaurantSiNumarMasa()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{masaManagedBean.masaCautareCustom.capacitate}" placeholder="Capacitate Masa"/>
+                <p:inputText value="#{masaManagedBean.masaCautareCustom.numarMasa}" placeholder="Numar Masa"/>
+                <p:inputText value="#{masaManagedBean.masaCautareCustom.rezervata}" placeholder="Rezervata"/>
+
+
+                <p:commandButton value="Cauta mese custom"
+                                 action="#{masaManagedBean.cautaMese()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="masa" value="#{masaManagedBean.masas}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{masa.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Numar">
+                        <h:outputText value="#{masa.numarMasa}"/>
+                    </p:column>
+
+                    <p:column headerText="Capacitate">
+                        <h:outputText value="#{masa.capacitate}"/>
+                    </p:column>
+
+                    <p:column headerText="Rezervata">
+                        <h:outputText value="#{masa.rezervata}"/>
+                    </p:column>
+
+                    <p:column headerText="Restaurant">
+                        <h:outputText value="#{masa.restaurant}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{masaManagedBean.pregatesteActualizareMasa(masa)}"/>
+
+
+                        <p:dialog header="Actualizare Laptop" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{masaManagedBean.masaPentruActualizare.capacitate}"
+                                         placeholder="Capacitate"/>
+                            <p:inputText value="#{masaManagedBean.masaPentruActualizare.numarMasa}"
+                                         placeholder="Numar Masa"/>
+                            <p:inputText value="#{masaManagedBean.masaPentruActualizare.rezervata}"
+                                         placeholder="Rezervata"/>
+                            <p:selectOneMenu value="#{masaManagedBean.restaurantIdPentruActualizare}">
+                                <f:selectItems value="#{masaManagedBean.restaurante}" var="restaurant"
+                                               itemValue="#{restaurant.id}"/>
+                            </p:selectOneMenu>
+
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{masaManagedBean.actualizeazaMasa()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{masaManagedBean.verificaMasa(masa)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Masa" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{masaManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{masaManagedBean.stergeMasa()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{masaManagedBean.masaToSave.numarMasa}" placeholder="Numar Masa"/>
+
+                    <p:outputLabel style="padding-top: 7px" value="Capacitate:"/>
+                    <p:selectOneMenu value="#{masaManagedBean.masaToSave.capacitate}" placeholder="Capacitate">
+                        <f:selectItem itemLabel="2 Persoane" itemValue="1"/>
+                        <f:selectItem itemLabel="4 Persoane" itemValue="2"/>
+                        <f:selectItem itemLabel="6 Persoane" itemValue="3"/>
+                        <f:selectItem itemLabel="12 Persoane" itemValue="4"/>
+                    </p:selectOneMenu>
+
+
+                    <p:outputLabel style="padding-top: 7px" value="Rezervata:"/>
+                    <p:selectOneRadio value="#{masaManagedBean.masaToSave.rezervata}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+                    <p:outputLabel style="padding-top: 7px" value="Restaurant:"/>
+                    <p:selectOneMenu value="#{masaManagedBean.restaurantId}">
+                        <f:selectItems value="#{masaManagedBean.restaurante}" var="restaurant"
+                                       itemValue="#{restaurant.id}"/>
+                    </p:selectOneMenu>
+                    <p:commandButton update="@form" value="Adaugă Masa"
+                                     action="#{masaManagedBean.adaugaMasa()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

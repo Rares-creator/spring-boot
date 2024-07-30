@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{tricouManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{tricouManagedBean.pretMaiMareCautare}" placeholder="Introduceti pretul"/>
+
+                <p:commandButton value="Cauta tricou dupa pret mai mare"
+                                 action="#{tricouManagedBean.cautaTricouDupaPretMaiMare()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{tricouManagedBean.culoareCautare}"
+                             placeholder="Culoare:"/>
+                <p:inputText value="#{tricouManagedBean.materialCautare}" placeholder="Introduceti material:"/>
+
+                <p:commandButton value="Cauta tricou dupa material si culoare"
+                                 action="#{tricouManagedBean.cautaTricouDupaMaterialSiCuloare()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{tricouManagedBean.tricouCautareCustom.material}"
+                             placeholder="Introduceti material"/>
+                <p:inputText value="#{tricouManagedBean.tricouCautareCustom.culoare}"
+                             placeholder="Introduceti culoare"/>
+                <p:inputText value="#{tricouManagedBean.tricouCautareCustom.pret}" placeholder="Introduceti pret"/>
+
+                <p:outputLabel style="padding-top: 7px" value="Sex:"/>
+                <p:selectOneMenu value="#{tricouManagedBean.tricouCautareCustom.sex}">
+                    <f:selectItems value="#{tricouManagedBean.loadListOfSexes()}"/>
+                </p:selectOneMenu>
+                <p:outputLabel style="padding-top: 7px" value="Marime:"/>
+                <p:selectOneMenu value="#{tricouManagedBean.tricouCautareCustom.marime}">
+                    <f:selectItems value="#{tricouManagedBean.loadListOfMarimi()}"/>
+                </p:selectOneMenu>
+
+                <p:commandButton value="Cauta tricouri custom"
+                                 action="#{tricouManagedBean.cautaTricouriCustom()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="tricou" value="#{tricouManagedBean.tricous}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{tricou.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Material">
+                        <h:outputText value="#{tricou.material}"/>
+                    </p:column>
+
+                    <p:column headerText="Marime">
+                        <h:outputText value="#{tricou.marime}"/>
+                    </p:column>
+
+                    <p:column headerText="Sex">
+                        <h:outputText value="#{tricou.sex}"/>
+                    </p:column>
+
+                    <p:column headerText="Culoare">
+                        <h:outputText value="#{tricou.culoare}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Pret">
+                        <h:outputText value="#{tricou.pret}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{tricouManagedBean.pregatesteActualizareTricou(tricou)}"/>
+
+
+                        <p:dialog header="Actualizare Tricou" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{tricouManagedBean.tricouPentruActualizare.marime}"
+                                         placeholder="Marime"/>
+                            <p:inputText value="#{tricouManagedBean.tricouPentruActualizare.material}"
+                                         placeholder="Material"/>
+                            <p:inputText value="#{tricouManagedBean.tricouPentruActualizare.pret}"
+                                         placeholder="Pret"/>
+                            <p:inputText value="#{tricouManagedBean.tricouPentruActualizare.culoare}"
+                                         placeholder="Culoare"/>
+                            <p:selectOneMenu value="#{tricouManagedBean.tricouPentruActualizare.sex}">
+                                <f:selectItems value="#{tricouManagedBean.loadListOfSexes()}"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{tricouManagedBean.actualizeazaTricou()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{tricouManagedBean.verificaTricou(tricou)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Tricou" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{tricouManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{tricouManagedBean.stergeTricou()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{tricouManagedBean.tricouToSave.material}" placeholder="Material"/>
+                    <p:inputText value="#{tricouManagedBean.tricouToSave.pret}" placeholder="Pret"/>
+                    <p:inputText value="#{tricouManagedBean.tricouToSave.culoare}" placeholder="Culoare"/>
+                    <p:outputLabel style="padding-top: 7px" value="Sex:"/>
+                    <p:selectOneMenu value="#{tricouManagedBean.tricouToSave.sex}">
+                        <f:selectItems value="#{tricouManagedBean.loadListOfSexes()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel style="padding-top: 7px" value="Marime:"/>
+                    <p:selectOneMenu value="#{tricouManagedBean.tricouToSave.marime}">
+                        <f:selectItems value="#{tricouManagedBean.loadListOfMarimi()}"/>
+                    </p:selectOneMenu>
+
+                    <p:commandButton update="@form" value="Adaugă Tricou"
+                                     action="#{tricouManagedBean.adaugaTricou()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

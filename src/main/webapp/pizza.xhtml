@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{pizzaManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{pizzaManagedBean.denumireCautare}" placeholder="Introduceti denumire"/>
+
+                <p:commandButton value="Cauta pizza dupa denumire"
+                                 action="#{pizzaManagedBean.cautaPizzaDupaDenumire()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{pizzaManagedBean.gramajCautare}"
+                             placeholder="Gramaj:"/>
+                <p:inputText value="#{pizzaManagedBean.pretCautare}" placeholder="Introduceti pret:"/>
+
+                <p:commandButton value="Cauta pizza dupa gramaj si pret"
+                                 action="#{pizzaManagedBean.cautaPizzaDupaGramajSiPret()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{pizzaManagedBean.pizzaCautareCustom.denumire}" placeholder="Denumire pizza"/>
+                <p:inputText value="#{pizzaManagedBean.pizzaCautareCustom.pret}" placeholder="Pret pizza"/>
+                <p:inputText value="#{pizzaManagedBean.pizzaCautareCustom.gramaj}" placeholder="Gramaj pizza"/>
+                <p:inputText value="#{pizzaManagedBean.pizzaCautareCustom.sosExtra}" placeholder="Sos extra pizza"/>
+                <p:inputText value="#{pizzaManagedBean.pizzaCautareCustom.glutenFree}" placeholder="Gluten free pizza"/>
+
+
+                <p:commandButton value="Cauta pizza custom"
+                                 action="#{pizzaManagedBean.cautaPizzaCustom()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="pizza" value="#{pizzaManagedBean.pizzas}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{pizza.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Denumire">
+                        <h:outputText value="#{pizza.denumire}"/>
+                    </p:column>
+
+                    <p:column headerText="Pret">
+                        <h:outputText value="#{pizza.pret}"/>
+                    </p:column>
+
+                    <p:column headerText="Gramaj">
+                        <h:outputText value="#{pizza.gramaj}"/>
+                    </p:column>
+
+                    <p:column headerText="Gluten Free">
+                        <h:outputText value="#{pizza.glutenFree}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Sos Extra">
+                        <h:outputText value="#{pizza.sosExtra}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{pizzaManagedBean.pregatesteActualizarePizza(pizza)}"/>
+
+
+                        <p:dialog header="Actualizare Mouse" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{pizzaManagedBean.pizzaPentruActualizare.denumire}"
+                                         placeholder="Denumire"/>
+                            <p:inputText value="#{pizzaManagedBean.pizzaPentruActualizare.pret}"
+                                         placeholder="Pret"/>
+                            <p:inputText value="#{pizzaManagedBean.pizzaPentruActualizare.glutenFree}"
+                                         placeholder="Gluten Free"/>
+                            <p:inputText value="#{pizzaManagedBean.pizzaPentruActualizare.gramaj}"
+                                         placeholder="Gramaj"/>
+                            <p:inputText value="#{pizzaManagedBean.pizzaPentruActualizare.sosExtra}"
+                                         placeholder="Sos Extra"/>
+
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{pizzaManagedBean.actualizeazaPizza()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{pizzaManagedBean.verificaPizza(pizza)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Pizza" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{pizzaManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{pizzaManagedBean.stergePizza()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{pizzaManagedBean.pizzaToSave.denumire}" placeholder="Denumire"/>
+                    <p:inputText value="#{pizzaManagedBean.pizzaToSave.pret}" placeholder="Pret"/>
+                    <p:inputText value="#{pizzaManagedBean.pizzaToSave.gramaj}" placeholder="Gramaj"/>
+
+                    <p:outputLabel style="padding-top: 7px" value="Gluten Free:"/>
+                    <p:selectOneRadio value="#{pizzaManagedBean.pizzaToSave.glutenFree}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+
+                    <p:outputLabel style="padding-top: 7px" value="Sos Extra:"/>
+                    <p:selectOneRadio value="#{pizzaManagedBean.pizzaToSave.sosExtra}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+                    <p:commandButton update="@form" value="Adaugă Pizza"
+                                     action="#{pizzaManagedBean.adaugaPizza()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

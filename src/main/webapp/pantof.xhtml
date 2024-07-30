@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{pantofManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{pantofManagedBean.tipPantofCautare}" placeholder="Introduceti tipul pantofului"/>
+
+                <p:commandButton value="Cauta pantof dupa tipul acestuia"
+                                 action="#{pantofManagedBean.cautaPantofDupaTipPantof()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:selectOneMenu value="#{pantofManagedBean.sexCautare}">
+                    <f:selectItems value="#{pantofManagedBean.loadListOfSexes()}"/>
+                </p:selectOneMenu>
+                <p:inputText value="#{pantofManagedBean.numarCautare}" placeholder="Numar pantof:"/>
+
+                <p:commandButton value="Cauta pantof dupa sex si numar"
+                                 action="#{pantofManagedBean.cautaPantofDupaSexSiNumar()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{pantofManagedBean.pantofCautareCustom.tipPantof}" placeholder="Tip Pantof"/>
+                <p:inputText value="#{pantofManagedBean.pantofCautareCustom.numar}" placeholder="Numar Pantof"/>
+                <p:inputText value="#{pantofManagedBean.pantofCautareCustom.material}" placeholder="Material Pantof"/>
+                <p:inputText value="#{pantofManagedBean.pantofCautareCustom.greutate}" placeholder="Greutate Pantof"/>
+                <p:outputLabel style="padding-top: 7px" value="Sex:"/>
+                <p:selectOneMenu value="#{pantofManagedBean.pantofCautareCustom.sex}">
+                    <f:selectItems value="#{pantofManagedBean.loadListOfSexes()}"/>
+                </p:selectOneMenu>
+
+                <p:commandButton value="Cauta pantofi custom"
+                                 action="#{pantofManagedBean.cautaPantofiCustom()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="pantof" value="#{pantofManagedBean.pantofs}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{pantof.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Tip Pantof">
+                        <h:outputText value="#{pantof.tipPantof}"/>
+                    </p:column>
+
+                    <p:column headerText="Numar">
+                        <h:outputText value="#{pantof.numar}"/>
+                    </p:column>
+
+                    <p:column headerText="Material">
+                        <h:outputText value="#{pantof.material}"/>
+                    </p:column>
+
+                    <p:column headerText="Sex">
+                        <h:outputText value="#{pantof.sex}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Greutate">
+                        <h:outputText value="#{pantof.greutate}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{pantofManagedBean.pregatesteActualizarePantof(pantof)}"/>
+
+
+                        <p:dialog header="Actualizare Mouse" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{pantofManagedBean.pantofPentruActualizare.tipPantof}"
+                                         placeholder="Tip Pantof"/>
+                            <p:inputText value="#{pantofManagedBean.pantofPentruActualizare.material}"
+                                         placeholder="Material"/>
+                            <p:inputText value="#{pantofManagedBean.pantofPentruActualizare.greutate}"
+                                         placeholder="Greutate"/>
+                            <p:inputText value="#{pantofManagedBean.pantofPentruActualizare.numar}"
+                                         placeholder="Numar"/>
+                            <p:selectOneMenu value="#{pantofManagedBean.pantofPentruActualizare.sex}">
+                                <f:selectItems value="#{pantofManagedBean.loadListOfSexes()}"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{pantofManagedBean.actualizeazaPantof()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{pantofManagedBean.verificaPantof(pantof)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Pantof" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{pantofManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{pantofManagedBean.stergePantof()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{pantofManagedBean.pantofToSave.tipPantof}" placeholder="Tip Pantof"/>
+                    <p:inputText value="#{pantofManagedBean.pantofToSave.numar}" placeholder="Numar"/>
+                    <p:inputText value="#{pantofManagedBean.pantofToSave.material}" placeholder="Material"/>
+                    <p:inputText value="#{pantofManagedBean.pantofToSave.greutate}" placeholder="Greutate"/>
+                    <p:outputLabel style="padding-top: 7px" value="Sex:"/>
+                    <p:selectOneMenu value="#{pantofManagedBean.pantofToSave.sex}">
+                        <f:selectItems value="#{pantofManagedBean.loadListOfSexes()}"/>
+                    </p:selectOneMenu>
+
+                    <p:commandButton update="@form" value="Adaugă Pantof"
+                                     action="#{pantofManagedBean.adaugaPantof()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{cameraManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{cameraManagedBean.jacuzziCautare}" placeholder="Introduceti daca doriti jacuzzi"/>
+
+                <p:commandButton value="Cauta camere dupa jacuzzi"
+                                 action="#{cameraManagedBean.cautaCameraDupaJacuzzi()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{cameraManagedBean.hotelDenumireCautare}" placeholder="Introduceti hotelul"/>
+                <p:inputText value="#{cameraManagedBean.tipCameraCautare}" placeholder="Introduceti tipul camerei"/>
+
+                <p:commandButton value="Cauta camere dupa hotel si tipul camerei"
+                                 action="#{cameraManagedBean.cautaCameraDupaHotelSiTipulCamerei()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{cameraManagedBean.cameraCautareCustom.tipCamera}" placeholder="Tip camera"/>
+                <p:inputText value="#{cameraManagedBean.cameraCautareCustom.suprafata}" placeholder="Suprafata camera"/>
+                <p:inputText value="#{cameraManagedBean.cameraCautareCustom.numarCamera}" placeholder="Numar camera"/>
+                <p:inputText value="#{cameraManagedBean.cameraCautareCustom.jacuzzi}" placeholder="Jacuzzi"/>
+
+
+                <p:commandButton value="Cauta camere custom"
+                                 action="#{cameraManagedBean.cautaCamere()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="camera" value="#{cameraManagedBean.cameras}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{camera.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Numarul Camerei">
+                        <h:outputText value="#{camera.numarCamera}"/>
+                    </p:column>
+
+                    <p:column headerText="Tipul Camerei">
+                        <h:outputText value="#{camera.tipCamera}"/>
+                    </p:column>
+
+                    <p:column headerText="Suprafata camerei">
+                        <h:outputText value="#{camera.suprafata}"/>
+                    </p:column>
+
+                    <p:column headerText="Jacuzzi">
+                        <h:outputText value="#{camera.jacuzzi}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Hotelul camerei">
+                        <h:outputText value="#{camera.hotel}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{cameraManagedBean.pregatesteActualizareBirou(camera)}"/>
+
+
+                        <p:dialog header="Actualizare Camera" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{cameraManagedBean.cameraPentruActualizare.suprafata}"
+                                         placeholder="Suprafata"/>
+                            <p:inputText value="#{cameraManagedBean.cameraPentruActualizare.numarCamera}"
+                                         placeholder="Numar Camera"/>
+                            <p:inputText value="#{cameraManagedBean.cameraPentruActualizare.tipCamera}"
+                                         placeholder="Tip Camera"/>
+                            <p:inputText value="#{cameraManagedBean.cameraPentruActualizare.jacuzzi}"
+                                         placeholder="Jacuzii"/>
+                            <p:selectOneMenu value="#{cameraManagedBean.hotelIdPentruActualizare}">
+                                <f:selectItems value="#{cameraManagedBean.hoteluri}" var="hotel"
+                                               itemValue="#{hotel.id}"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{cameraManagedBean.actualizeazaCamera()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{cameraManagedBean.verificaCamere(camera)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Camera" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{cameraManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{cameraManagedBean.stergeCamera()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{cameraManagedBean.cameraToSave.numarCamera}" placeholder="Numar Camera"/>
+                    <p:inputText value="#{cameraManagedBean.cameraToSave.suprafata}" placeholder="Suprafata"/>
+                    <p:outputLabel style="padding-top: 7px" value="Tip Camera:"/>
+                    <p:selectOneMenu value="#{cameraManagedBean.cameraToSave.tipCamera}" placeholder="Tipul Camerei:">
+                        <f:selectItem itemLabel="Single" itemValue="Single"/>
+                        <f:selectItem itemLabel="Double" itemValue="Double"/>
+                        <f:selectItem itemLabel="Luxury" itemValue="Luxury"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel style="padding-top: 7px" value="Numar Bai:"/>
+                    <p:outputLabel style="padding-top: 7px" value="Jacuzzi:"/>
+                    <p:selectOneRadio value="#{cameraManagedBean.cameraToSave.jacuzzi}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+
+                    <p:outputLabel style="padding-top: 7px" value="Hotel:"/>
+                    <p:selectOneMenu value="#{cameraManagedBean.hotelId}">
+                        <f:selectItems value="#{cameraManagedBean.hoteluri}" var="hotel" itemValue="#{hotel.id}"/>
+                    </p:selectOneMenu>
+                    <p:commandButton update="@form" value="Adaugă Camera"
+                                     action="#{cameraManagedBean.adaugaCamera()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

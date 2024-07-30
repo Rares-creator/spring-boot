@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+
+<h:head>
+    <h:outputStylesheet library="primefaces" name="primefaces.css"/>
+    <h:outputScript library="primefaces" name="jquery/jquery.js"/>
+    <h:outputScript library="primefaces" name="primefaces.js"/>
+</h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{apartamentManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{apartamentManagedBean.locatieCautare}" placeholder="Introduceti locatia"/>
+
+                <p:commandButton value="Cauta apartamente dupa locatie"
+                                 action="#{apartamentManagedBean.cautaApartamentDupaLocatie()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{apartamentManagedBean.suprafataCautare}" placeholder="Introduceti suprafata"/>
+                <p:inputText value="#{apartamentManagedBean.numarCamereCautare}" placeholder="Numarul camerelor"/>
+
+                <p:commandButton value="Cauta apartamente dupa suprafata mai mare si numar camere mai multe"
+                                 action="#{apartamentManagedBean.cautaApartamentDupaSuprafataMaiMareSiNumarCamereMaiMulte()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{apartamentManagedBean.apartamentCautareCustom.locatie}"
+                             placeholder="Introduceti locatia"/>
+                <p:inputText value="#{apartamentManagedBean.apartamentCautareCustom.suprafata}"
+                             placeholder="Introduceti suprafata"/>
+                <p:inputText value="#{apartamentManagedBean.apartamentCautareCustom.balcon}"
+                             placeholder="Selectati daca doriti balcon"/>
+                <p:inputText value="#{apartamentManagedBean.apartamentCautareCustom.numarBai}" placeholder="Numar bai"/>
+                <p:inputText value="#{apartamentManagedBean.apartamentCautareCustom.numarCamere}"
+                             placeholder="Numar camere"/>
+
+                <p:commandButton value="Cauta apartamente custom"
+                                 action="#{apartamentManagedBean.cautaApartamentCustom()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="apartament" value="#{apartamentManagedBean.apartaments}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{apartament.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Locatie">
+                        <h:outputText value="#{apartament.locatie}"/>
+                    </p:column>
+
+                    <p:column headerText="Suprafata">
+                        <h:outputText value="#{apartament.suprafata}"/>
+                    </p:column>
+
+                    <p:column headerText="Numar Camere">
+                        <h:outputText value="#{apartament.numarCamere}"/>
+                    </p:column>
+
+                    <p:column headerText="Numar Bai">
+                        <h:outputText value="#{apartament.numarBai}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Balcon">
+                        <h:outputText value="#{apartament.balcon}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{apartamentManagedBean.pregatesteActualizareApartament(apartament)}"/>
+
+
+                        <p:dialog header="Actualizare Apartament" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{apartamentManagedBean.apartamentPentruActualizare.locatie}"
+                                         placeholder="Locatie"/>
+                            <p:inputText value="#{apartamentManagedBean.apartamentPentruActualizare.suprafata}"
+                                         placeholder="Suprafata"/>
+                            <p:inputText value="#{apartamentManagedBean.apartamentPentruActualizare.numarCamere}"
+                                         placeholder="Numar Camere"/>
+                            <p:inputText value="#{apartamentManagedBean.apartamentPentruActualizare.numarBai}"
+                                         placeholder="Numar Bai"/>
+                            <p:inputText value="#{apartamentManagedBean.apartamentPentruActualizare.balcon}"
+                                         placeholder="Balcon"/>
+
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{apartamentManagedBean.actualizeazaApartament()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{apartamentManagedBean.verificaBirouriSiSeteazaMesajDialog(apartament)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Apartament" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{apartamentManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{apartamentManagedBean.stergeApartament()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{apartamentManagedBean.apartamentToSave.locatie}" placeholder="Locatie"/>
+                    <p:inputText value="#{apartamentManagedBean.apartamentToSave.suprafata}" placeholder="Suprafata"/>
+                    <p:outputLabel style="padding-top: 7px" value="Numar Camere:"/>
+                    <p:selectOneMenu value="#{apartamentManagedBean.apartamentToSave.numarCamere}"
+                                     placeholder="Numar Camere">
+                        <f:selectItem itemLabel="1 Camera" itemValue="1"/>
+                        <f:selectItem itemLabel="2 Camere" itemValue="2"/>
+                        <f:selectItem itemLabel="3 Camere" itemValue="3"/>
+                        <f:selectItem itemLabel="4 Camere" itemValue="4"/>
+                        <f:selectItem itemLabel="5 Camere" itemValue="5"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel style="padding-top: 7px" value="Numar Bai:"/>
+                    <p:selectOneMenu value="#{apartamentManagedBean.apartamentToSave.numarBai}" placeholder="Numar Bai">
+                        <f:selectItem itemLabel="1 Baie" itemValue="1"/>
+                        <f:selectItem itemLabel="2 Bai" itemValue="2"/>
+                        <f:selectItem itemLabel="3 Bai" itemValue="3"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel style="padding-top: 7px" value="Balcon:"/>
+                    <p:selectOneRadio value="#{apartamentManagedBean.apartamentToSave.balcon}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+                    <p:commandButton update="@form" value="Adaugă Apartament"
+                                     action="#{apartamentManagedBean.adaugaApartament()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{mouseManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{mouseManagedBean.denumireCautare}" placeholder="Introduceti denumirea"/>
+
+                <p:commandButton value="Cauta mouse dupa denumire"
+                                 action="#{mouseManagedBean.cautaMouseDupaDenumire()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{mouseManagedBean.cabluUsbCautare}"
+                             placeholder="Doriti cablu Usb:"/>
+                <p:inputText value="#{mouseManagedBean.numarButoaneCautare}" placeholder="Numar butoane:"/>
+
+                <p:commandButton value="Cauta mouse dupa cablu usb si numar butoane"
+                                 action="#{mouseManagedBean.cautaMouseDupaCabluUsbSiNumarButoane()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{mouseManagedBean.mouseCautareCustom.denumire}" placeholder="Denumire Mouse"/>
+                <p:inputText value="#{mouseManagedBean.mouseCautareCustom.luminaAmbientala}"
+                             placeholder="Lumina ambientala Mouse"/>
+                <p:inputText value="#{mouseManagedBean.mouseCautareCustom.numarButoane}"
+                             placeholder="Numar butoane Mouse"/>
+                <p:inputText value="#{mouseManagedBean.mouseCautareCustom.numarDpi}" placeholder="Numar dpi Mouse"/>
+
+
+                <p:commandButton value="Cauta mouseuri custom"
+                                 action="#{mouseManagedBean.cautaMouseuriCustom()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="mouse" value="#{mouseManagedBean.mouses}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{mouse.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Denumire">
+                        <h:outputText value="#{mouse.denumire}"/>
+                    </p:column>
+
+                    <p:column headerText="Cablu Usb">
+                        <h:outputText value="#{mouse.cabluUsb}"/>
+                    </p:column>
+
+                    <p:column headerText="Lumina Ambientala">
+                        <h:outputText value="#{mouse.luminaAmbientala}"/>
+                    </p:column>
+
+                    <p:column headerText="Numar Butoane">
+                        <h:outputText value="#{mouse.numarButoane}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Numar Dpi">
+                        <h:outputText value="#{mouse.numarDpi}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{mouseManagedBean.pregatesteActualizareMouse(mouse)}"/>
+
+
+                        <p:dialog header="Actualizare Mouse" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{mouseManagedBean.mousePentruActualizare.denumire}"
+                                         placeholder="Denumire"/>
+                            <p:inputText value="#{mouseManagedBean.mousePentruActualizare.numarDpi}"
+                                         placeholder="Numar Dpi"/>
+                            <p:inputText value="#{mouseManagedBean.mousePentruActualizare.numarButoane}"
+                                         placeholder="Numar Butoane"/>
+                            <p:inputText value="#{mouseManagedBean.mousePentruActualizare.luminaAmbientala}"
+                                         placeholder="Lumina Ambientala"/>
+                            <p:inputText value="#{mouseManagedBean.mousePentruActualizare.cabluUsb}"
+                                         placeholder="Cablu Usb"/>
+
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{mouseManagedBean.actualizeazaMouse()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{mouseManagedBean.verificaMouse(mouse)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Mouse" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{mouseManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{mouseManagedBean.stergeMouse()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{mouseManagedBean.mouseToSave.denumire}" placeholder="Denumire"/>
+                    <p:inputText value="#{mouseManagedBean.mouseToSave.numarDpi}" placeholder="Numar Dpi"/>
+                    <p:inputText value="#{mouseManagedBean.mouseToSave.numarButoane}" placeholder="Numar Butoane"/>
+
+                    <p:outputLabel style="padding-top: 7px" value="Cablu Usb:"/>
+                    <p:selectOneRadio value="#{mouseManagedBean.mouseToSave.cabluUsb}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+
+                    <p:outputLabel style="padding-top: 7px" value="Lumina Ambientala:"/>
+                    <p:selectOneRadio value="#{mouseManagedBean.mouseToSave.luminaAmbientala}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+                    <p:commandButton update="@form" value="Adaugă Mouse"
+                                     action="#{mouseManagedBean.adaugaMouse()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

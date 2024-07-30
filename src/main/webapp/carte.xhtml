@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{carteManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{carteManagedBean.numeCautare}" placeholder="Introduceti numele cartii"/>
+
+                <p:commandButton value="Cauta carti dupa nume"
+                                 action="#{carteManagedBean.cautaCarteDupaNume()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{carteManagedBean.autorCautare}" placeholder="Introduceti autorul"/>
+                <p:inputText value="#{carteManagedBean.genCautare}" placeholder="Introduceti genul"/>
+
+                <p:commandButton value="Cauta carti dupa autor si genul acestora"
+                                 action="#{carteManagedBean.cautaCarteDupaAutorSiGen()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{carteManagedBean.carteCautareCustom.gen}" placeholder="Gen Carte"/>
+                <p:inputText value="#{carteManagedBean.carteCautareCustom.nume}" placeholder="Nume Carte"/>
+                <p:inputText value="#{carteManagedBean.carteCautareCustom.autor}" placeholder="Autor Carte"/>
+                <p:inputText value="#{carteManagedBean.carteCautareCustom.numarPagini}" placeholder="Numar pagini"/>
+
+                <p:commandButton value="Cauta carte custom"
+                                 action="#{carteManagedBean.cautaCarti()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="carte" value="#{carteManagedBean.cartes}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{carte.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Numele">
+                        <h:outputText value="#{carte.nume}"/>
+                    </p:column>
+
+                    <p:column headerText="Autorul">
+                        <h:outputText value="#{carte.autor}"/>
+                    </p:column>
+
+                    <p:column headerText="Genul">
+                        <h:outputText value="#{carte.gen}"/>
+                    </p:column>
+
+                    <p:column headerText="Numar pagini">
+                        <h:outputText value="#{carte.numarPagini}"/>
+                    </p:column>
+
+                    <p:column headerText="Id Biblioteca">
+                        <h:outputText value="#{carte.biblioteca}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{carteManagedBean.pregatesteActualizareCarte(carte)}"/>
+
+
+                        <p:dialog header="Actualizare Carte" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{carteManagedBean.cartePentruActualizare.nume}" placeholder="Nume"/>
+                            <p:inputText value="#{carteManagedBean.cartePentruActualizare.autor}"
+                                         placeholder="Autor"/>
+                            <p:inputText value="#{carteManagedBean.cartePentruActualizare.gen}" placeholder="Gen"/>
+                            <p:inputText value="#{carteManagedBean.cartePentruActualizare.numarPagini}"
+                                         placeholder="Numar Pagini"/>
+                            <p:selectOneMenu value="#{carteManagedBean.bibliotecaIdPentruActualizare}">
+                                <f:selectItems value="#{carteManagedBean.biblioteci}" var="biblioteca"
+                                               itemValue="#{biblioteca.id}"/>
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{carteManagedBean.actualizeazaCarte()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{carteManagedBean.verificaCarte(carte)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Carte" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{carteManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{carteManagedBean.stergeCarte()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{carteManagedBean.carteToSave.nume}" placeholder="Numele cartii"/>
+                    <p:inputText value="#{carteManagedBean.carteToSave.autor}" placeholder="Autor"/>
+                    <p:inputText value="#{carteManagedBean.carteToSave.gen}" placeholder="Gen"/>
+                    <p:inputText value="#{carteManagedBean.carteToSave.numarPagini}" placeholder="Numar Pagini"/>
+
+                    <p:outputLabel style="padding-top: 7px" value="Biblioteca:"/>
+                    <p:selectOneMenu value="#{carteManagedBean.bibliotecaId}">
+                        <f:selectItems value="#{carteManagedBean.biblioteci}" var="biblioteca"
+                                       itemValue="#{biblioteca.id}"/>
+                    </p:selectOneMenu>
+
+                    <p:commandButton update="@form" value="Adaugă Carte"
+                                     action="#{carteManagedBean.adaugaCarte()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

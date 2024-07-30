@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{surubManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{surubManagedBean.zonaFolosireCautare}"
+                             placeholder="Introduceti zona de folosire"/>
+
+                <p:commandButton value="Cauta surub dupa zona de folosire"
+                                 action="#{surubManagedBean.cautaSurubDupaZonaFolosire()}"
+                                 update="@form"/>
+                <br/>
+
+                <p:inputText value="#{surubManagedBean.tipSurubCautare}"
+                             placeholder="Tip surub:"/>
+                <p:inputText value="#{surubManagedBean.materialCautare}" placeholder="Introduceti material:"/>
+
+                <p:commandButton value="Cauta surub dupa tip si material"
+                                 action="#{surubManagedBean.cautaSurubDupaTipSurubSiMaterial()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{surubManagedBean.surubCautareCustom.tipSurub}" placeholder="Tip Surub"/>
+                <p:inputText value="#{surubManagedBean.surubCautareCustom.zonaFolosire}"
+                             placeholder="Zona folosire Surub"/>
+                <p:inputText value="#{surubManagedBean.surubCautareCustom.material}" placeholder="Material Surub"/>
+                <p:inputText value="#{surubManagedBean.surubCautareCustom.lungime}" placeholder="Lungime Surub"/>
+                <p:inputText value="#{surubManagedBean.surubCautareCustom.grosime}" placeholder="Grosime Surub"/>
+
+
+                <p:commandButton value="Cauta surub custom"
+                                 action="#{surubManagedBean.cautaSuruburiCustom()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="surub" value="#{surubManagedBean.surubs}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{surub.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Tip Surub">
+                        <h:outputText value="#{surub.tipSurub}"/>
+                    </p:column>
+
+                    <p:column headerText="Material">
+                        <h:outputText value="#{surub.material}"/>
+                    </p:column>
+
+                    <p:column headerText="Lungime">
+                        <h:outputText value="#{surub.lungime}"/>
+                    </p:column>
+
+                    <p:column headerText="Grosime">
+                        <h:outputText value="#{surub.grosime}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Zona Folosire">
+                        <h:outputText value="#{surub.zonaFolosire}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{surubManagedBean.pregatesteActualizareSurub(surub)}"/>
+
+
+                        <p:dialog header="Actualizare Surub" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{surubManagedBean.surubPentruActualizare.tipSurub}"
+                                         placeholder="Tip Surub"/>
+                            <p:inputText value="#{surubManagedBean.surubPentruActualizare.material}"
+                                         placeholder="Material"/>
+                            <p:inputText value="#{surubManagedBean.surubPentruActualizare.grosime}"
+                                         placeholder="Grosime"/>
+                            <p:inputText value="#{surubManagedBean.surubPentruActualizare.lungime}"
+                                         placeholder="Lungime"/>
+                            <p:inputText value="#{surubManagedBean.surubPentruActualizare.zonaFolosire}"
+                                         placeholder="Zona Folosire"/>
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{surubManagedBean.actualizeazaSurub()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{surubManagedBean.verificaSurub(surub)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Surub" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{surubManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{surubManagedBean.stergeSurub()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+                <div style="display: flex">
+                    <p:inputText value="#{surubManagedBean.surubToSave.tipSurub}" placeholder="Tip Surub"/>
+                    <p:inputText value="#{surubManagedBean.surubToSave.zonaFolosire}" placeholder="Zona Folosire"/>
+                    <p:inputText value="#{surubManagedBean.surubToSave.material}" placeholder="Material"/>
+                    <p:inputText value="#{surubManagedBean.surubToSave.lungime}" placeholder="Lungime"/>
+                    <p:inputText value="#{surubManagedBean.surubToSave.grosime}" placeholder="Grosime"/>
+
+                    <p:commandButton update="@form" value="Adaugă Surub"
+                                     action="#{surubManagedBean.adaugaSurub()}"/>
+                </div>
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>

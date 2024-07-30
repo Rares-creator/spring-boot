@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head></h:head>
+<ui:composition template="/template.xhtml">
+    <ui:define name="content">
+        <h:body>
+
+
+            <h:form>
+                <p:commandButton style="float: right" value="Reset" action="#{bibliotecaManagedBean.reset()}"
+                                 update="@form"/>
+                <p:inputText value="#{bibliotecaManagedBean.locatieCautare}" placeholder="Introduceti locatia"/>
+
+                <p:commandButton value="Cauta biblioteci dupa locatie"
+                                 action="#{bibliotecaManagedBean.cautaBibliotecaDupaLocatie()}"
+                                 update="@form"/>
+                <br/>
+                <p:inputText value="#{bibliotecaManagedBean.bibliotecaCautareCustom.locatie}"
+                             placeholder="Introduceti locatia"/>
+                <p:inputText value="#{bibliotecaManagedBean.bibliotecaCautareCustom.denumire}"
+                             placeholder="Denumirea"/>
+                <p:inputText value="#{bibliotecaManagedBean.bibliotecaCautareCustom.deschisWeekend}"
+                             placeholder="Deschis weekend"/>
+
+                <p:commandButton value="Cauta biblioteci custom"
+                                 action="#{bibliotecaManagedBean.cautaBibliotecaCustom()}"
+                                 update="@form"/>
+                <br/>
+                <p:dataTable var="biblioteca" value="#{bibliotecaManagedBean.bibliotecas}">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{biblioteca.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Denumire">
+                        <h:outputText value="#{biblioteca.denumire}"/>
+                    </p:column>
+
+                    <p:column headerText="Locatie">
+                        <h:outputText value="#{biblioteca.locatie}"/>
+                    </p:column>
+
+                    <p:column headerText="Deschis Weekend">
+                        <h:outputText value="#{biblioteca.deschisWeekend}"/>
+                    </p:column>
+
+                    <p:column headerText="Acțiuni">
+                        <p:commandButton value="Actualizare" update="@form"
+                                         oncomplete="PF('updateDialogVar').show();"
+                                         action="#{bibliotecaManagedBean.pregatesteActualizareBiblioteca(biblioteca)}"/>
+
+
+                        <p:dialog header="Actualizare Biblioteca" widgetVar="updateDialogVar" modal="true" height="100">
+                            <p:inputText value="#{bibliotecaManagedBean.bibliotecaPentruActualizare.denumire}"
+                                         placeholder="Denumire"/>
+                            <p:inputText value="#{bibliotecaManagedBean.bibliotecaPentruActualizare.locatie}"
+                                         placeholder="Locatie"/>
+                            <p:inputText value="#{bibliotecaManagedBean.bibliotecaPentruActualizare.deschisWeekend}"
+                                         placeholder="Deschis Weekend"/>
+
+
+                            <p:commandButton value="Salvează Actualizare" update="@form"
+                                             action="#{bibliotecaManagedBean.actualizeazaBiblioteca()}"
+                                             oncomplete="PF('updateDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('updateDialogVar').hide();"/>
+                        </p:dialog>
+                        <p:commandButton value="Șterge" update="@form"
+                                         action="#{bibliotecaManagedBean.verificaBibliotecaiSiSeteazaMesajDialog(biblioteca)}"
+                                         oncomplete="PF('deleteDialogVar').show();"
+                        />
+                        <p:dialog header="Ștergere Biblioteca" widgetVar="deleteDialogVar" modal="true" height="100">
+                            <h:outputText value="#{bibliotecaManagedBean.mesajDialog}"/>
+                            <br/>
+                            <p:commandButton value="Șterge" action="#{bibliotecaManagedBean.stergeBiblioteca()}"
+                                             oncomplete="PF('deleteDialogVar').hide();"/>
+                            <p:commandButton value="Anulează" onclick="PF('deleteDialogVar').hide();"/>
+                        </p:dialog>
+                    </p:column>
+
+
+                </p:dataTable>
+
+                <div style="display: flex">
+                    <p:inputText value="#{bibliotecaManagedBean.bibliotecaToSave.locatie}" placeholder="Locatie"/>
+                    <p:inputText value="#{bibliotecaManagedBean.bibliotecaToSave.denumire}" placeholder="Denumire"/>
+
+                    <p:outputLabel style="padding-top: 7px" value="Deschis Weekend:"/>
+                    <p:selectOneRadio value="#{bibliotecaManagedBean.bibliotecaToSave.deschisWeekend}">
+                        <f:selectItem itemValue="true" itemLabel="Da"/>
+                        <f:selectItem itemValue="false" itemLabel="Nu"/>
+                    </p:selectOneRadio>
+                    <p:commandButton update="@form" value="Adaugă Biblioteca"
+                                     action="#{bibliotecaManagedBean.adaugaBiblioteca()}"/>
+                </div>
+
+
+            </h:form>
+
+
+        </h:body>
+    </ui:define>
+</ui:composition>
+</html>
